@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Melee",
+                    "type": "Button",
+                    "id": "e90efe83-cb31-4e0a-9f46-45bb50e5d706",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -153,7 +162,7 @@
                     "name": "",
                     "id": "54ec0aa2-e2d3-451c-b2bc-64e9eec4fa6c",
                     "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
+                    "interactions": "SlowTap",
                     "processors": "",
                     "groups": "",
                     "action": "Crouch",
@@ -168,6 +177,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d52b4adb-ce9f-4915-b8b2-14ce6c9e0d04",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Melee",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

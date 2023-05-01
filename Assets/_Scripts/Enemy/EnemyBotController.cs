@@ -8,20 +8,18 @@ namespace UnityTutorial.EnemyBotControl
         [SerializeField] private GameObject playerObject;
         [SerializeField] private float stoppingDistance = 2.0f;
         [SerializeField] private float chaseRadius = 10.0f;
+        [SerializeField] private float wanderRadius = 20.0f;
         [SerializeField] private float AnimBlendSpeed = 8.9f;
-        [SerializeField] private LayerMask GroundCheck;
-        [SerializeField] private float Dis2Ground = 0.8f;
+        [SerializeField] private float wanderTimer = 5.0f;
 
         private NavMeshAgent _navMeshAgent;
         private Rigidbody _playerRigidbody;
         private Animator _animator;
-        private bool _grounded = false;
         private bool _hasAnimator;
         private int _xVelHash;
         private int _yVelHash;
-        private int _groundHash;
-        private int _fallingHash;
         private Vector2 _currentVelocity;
+        private float _timer;
 
         private void Start()
         {
@@ -32,15 +30,12 @@ namespace UnityTutorial.EnemyBotControl
             _navMeshAgent.updateRotation = false;
             _navMeshAgent.stoppingDistance = stoppingDistance;
 
-            _xVelHash = Animator.StringToHash("X_Velocity");
-            _yVelHash = Animator.StringToHash("Y_Velocity");
-            _groundHash = Animator.StringToHash("Grounded");
-            _fallingHash = Animator.StringToHash("Falling");
+            _xVelHash = Animator.StringToHash("angularspeed");
+            _yVelHash = Animator.StringToHash("speed");
         }
 
         private void FixedUpdate()
         {
-            SampleGround();
             Move();
         }
 
@@ -56,45 +51,34 @@ namespace UnityTutorial.EnemyBotControl
             }
             else
             {
-                _navMeshAgent.ResetPath();
-            }
-
-            if (_grounded)
-            {
-                _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, _navMeshAgent.velocity.x, AnimBlendSpeed * Time.fixedDeltaTime);
-                _currentVelocity.y = Mathf.Lerp(_currentVelocity.y, _navMeshAgent.velocity.z, AnimBlendSpeed * Time.fixedDeltaTime);
-
-                if (_navMeshAgent.velocity.sqrMagnitude > Mathf.Epsilon) // Check if the agent is moving
+                _timer += Time.fixedDeltaTime;
+                if (_timer >= wanderTimer)
                 {
-                    Quaternion targetRotation = Quaternion.LookRotation(_navMeshAgent.velocity.normalized);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * AnimBlendSpeed);
+                    RandomWander();
+                    _timer = 0;
                 }
             }
 
-            _animator.SetFloat(_xVelHash, _currentVelocity.x);
-            _animator.SetFloat(_yVelHash, _currentVelocity.y);
-        }
+            _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, _navMeshAgent.velocity.x, AnimBlendSpeed * Time.fixedDeltaTime);
+            _currentVelocity.y = Mathf.Lerp(_currentVelocity.y, _navMeshAgent.velocity.z, AnimBlendSpeed * Time.fixedDeltaTime);
 
-        private void SampleGround()
-        {
-            if (!_hasAnimator) return;
-
-            RaycastHit hitInfo;
-            if (Physics.Raycast(_playerRigidbody.worldCenterOfMass, Vector3.down, out hitInfo, Dis2Ground + 0.1f, GroundCheck))
+            if (_navMeshAgent.velocity.sqrMagnitude > Mathf.Epsilon) // Check if the agent is moving
             {
-                _grounded = true;
-                SetAnimationGrounding();
-                return;
+                Quaternion targetRotation = Quaternion.LookRotation(_navMeshAgent.velocity.normalized);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * AnimBlendSpeed);
             }
-            _grounded = false;
-            SetAnimationGrounding();
-            return;
+
+            _animator.SetFloat("angularspeed", _currentVelocity.x);
+            _animator.SetFloat("speed", _currentVelocity.y);
         }
 
-        private void SetAnimationGrounding()
+        private void RandomWander()
         {
-            _animator.SetBool(_fallingHash, !_grounded);
-            _animator.SetBool(_groundHash, _grounded);
+            Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+            randomDirection += transform.position;
+            NavMeshHit navHit;
+            NavMesh.SamplePosition(randomDirection, out navHit, wanderRadius, -1);
+            _navMeshAgent.SetDestination(navHit.position);
         }
     }
 }

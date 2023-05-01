@@ -19,7 +19,7 @@ namespace UnityTutorial.PlayerControl
         [SerializeField] private LayerMask GroundCheck;
         [SerializeField] private float AirResistance = 0.8f;
         private Rigidbody _playerRigidbody;
-        private InputManager _inputManager;
+        [SerializeField] public InputManager _inputManager;
         private Animator _animator;
         private bool _grounded = false;
         private bool _hasAnimator;
@@ -31,6 +31,7 @@ namespace UnityTutorial.PlayerControl
         private int _zVelHash;
         private int _crouchHash;
         private int _attackHash;
+        private int _meleeHash;
         private float _xRotation;
 
         private const float _walkSpeed = 2f;
@@ -50,7 +51,8 @@ namespace UnityTutorial.PlayerControl
             _groundHash = Animator.StringToHash("Grounded");
             _fallingHash = Animator.StringToHash("Falling");
             _crouchHash = Animator.StringToHash("Crouch");
-            _attackHash = Animator.StringToHash("Punch");
+            _attackHash = Animator.StringToHash("Shoot");
+            _meleeHash = Animator.StringToHash("Punch");
         }
 
         private void FixedUpdate()
@@ -153,9 +155,22 @@ namespace UnityTutorial.PlayerControl
 
         private void HandleAttack()
         {
+            if (_inputManager.Melee)
+            {
+                _animator.SetBool(_meleeHash, true);
+            }
+            else
+            {
+                _animator.SetBool(_meleeHash, false);
+            }
+
             if (_inputManager.Attack)
             {
-                _animator.SetTrigger(_attackHash);
+                _animator.SetBool(_attackHash, true);
+            }
+            else
+            {
+                _animator.SetBool(_attackHash, false);
             }
         }
     }
