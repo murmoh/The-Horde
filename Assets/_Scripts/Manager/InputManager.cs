@@ -17,6 +17,9 @@ namespace UnityTutorial.Manager
         public bool Attack {get; private set;}
         public bool Melee {get; private set;}
         public bool Aim {get; private set;}
+        public bool Reload {get; private set;} // New input
+        public bool Interact {get; private set;} // New input
+        public bool Inventory {get; private set;} // New input
 
         private InputActionMap _currentMap;
         private InputAction _moveAction;
@@ -27,6 +30,9 @@ namespace UnityTutorial.Manager
         private InputAction _attackAction;
         private InputAction _meleeAction;
         private InputAction _aimAction;
+        private InputAction _reloadAction; // New input action
+        private InputAction _interactAction; // New input action
+        private InputAction _inventoryAction; // New input action
 
         private void Awake() {
             HideCursor();
@@ -39,7 +45,9 @@ namespace UnityTutorial.Manager
             _attackAction = _currentMap.FindAction("Attack");
             _meleeAction = _currentMap.FindAction("Melee");
             _aimAction = _currentMap.FindAction("Aim");
-
+            _reloadAction = _currentMap.FindAction("Reload"); // New input action
+            _interactAction = _currentMap.FindAction("Interact"); // New input action
+            _inventoryAction = _currentMap.FindAction("Inventory"); // New input action
 
             _moveAction.performed += onMove;
             _lookAction.performed += onLook;
@@ -49,6 +57,9 @@ namespace UnityTutorial.Manager
             _attackAction.started += onAttack;
             _meleeAction.started += onMelee;
             _aimAction.started += onAim;
+            _reloadAction.started += onReload; // New input event
+            _interactAction.started += onInteract; // New input event
+            _inventoryAction.started += onInventory; // New input event
 
             _moveAction.canceled += onMove;
             _lookAction.canceled += onLook;
@@ -57,6 +68,9 @@ namespace UnityTutorial.Manager
             _crouchAction.canceled += onCrouch;
             _attackAction.canceled += onAttack;
             _aimAction.canceled += onAim;
+            _reloadAction.canceled += onReload; // New input event
+            _interactAction.canceled += onInteract; // New input event
+            _inventoryAction.canceled += onInventory; // New input event
         }
 
         private void HideCursor()
@@ -64,7 +78,6 @@ namespace UnityTutorial.Manager
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-
         private void onMove(InputAction.CallbackContext context)
         {
             Move = context.ReadValue<Vector2>();
@@ -85,29 +98,39 @@ namespace UnityTutorial.Manager
         {
             Crouch = context.ReadValueAsButton();
         }
-
         private void onAttack(InputAction.CallbackContext context)
         {
             Attack = context.ReadValueAsButton();
         }
-
         private void onMelee(InputAction.CallbackContext context)
         {
             Melee = context.ReadValueAsButton();
         }
-
         private void onAim(InputAction.CallbackContext context)
         {
             Aim = context.ReadValueAsButton();
         }
-
-        private void OnEnable() {
+        private void onReload(InputAction.CallbackContext context) // New input method
+        {
+            Reload = context.ReadValueAsButton();
+        }
+        private void onInteract(InputAction.CallbackContext context) // New input method
+        {
+            Interact = context.ReadValueAsButton();
+        }
+        private void onInventory(InputAction.CallbackContext context) // New input method
+        {
+            Inventory = context.ReadValueAsButton();
+        }
+        private void OnEnable() 
+        {
             _currentMap.Enable();
         }
-
-        private void OnDisable() {
+        private void OnDisable() 
+        {
             _currentMap.Disable();
         }
-        
     }
+    
 }
+
