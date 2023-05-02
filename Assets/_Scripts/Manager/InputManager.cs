@@ -15,6 +15,8 @@ namespace UnityTutorial.Manager
         public bool Jump {get; private set;}
         public bool Crouch {get; private set;}
         public bool Attack {get; private set;}
+        public bool Melee {get; private set;}
+        public bool Aim {get; private set;}
 
         private InputActionMap _currentMap;
         private InputAction _moveAction;
@@ -23,6 +25,8 @@ namespace UnityTutorial.Manager
         private InputAction _jumpAction;
         private InputAction _crouchAction;
         private InputAction _attackAction;
+        private InputAction _meleeAction;
+        private InputAction _aimAction;
 
         private void Awake() {
             HideCursor();
@@ -33,6 +37,9 @@ namespace UnityTutorial.Manager
             _jumpAction = _currentMap.FindAction("Jump");
             _crouchAction = _currentMap.FindAction("Crouch");
             _attackAction = _currentMap.FindAction("Attack");
+            _meleeAction = _currentMap.FindAction("Melee");
+            _aimAction = _currentMap.FindAction("Aim");
+
 
             _moveAction.performed += onMove;
             _lookAction.performed += onLook;
@@ -40,6 +47,8 @@ namespace UnityTutorial.Manager
             _jumpAction.performed += onJump;
             _crouchAction.started += onCrouch;
             _attackAction.started += onAttack;
+            _meleeAction.started += onMelee;
+            _aimAction.started += onAim;
 
             _moveAction.canceled += onMove;
             _lookAction.canceled += onLook;
@@ -47,6 +56,7 @@ namespace UnityTutorial.Manager
             _jumpAction.canceled += onJump;
             _crouchAction.canceled += onCrouch;
             _attackAction.canceled += onAttack;
+            _aimAction.canceled += onAim;
         }
 
         private void HideCursor()
@@ -78,7 +88,17 @@ namespace UnityTutorial.Manager
 
         private void onAttack(InputAction.CallbackContext context)
         {
-            Attack = context.phase == InputActionPhase.Started;
+            Attack = context.ReadValueAsButton();
+        }
+
+        private void onMelee(InputAction.CallbackContext context)
+        {
+            Melee = context.ReadValueAsButton();
+        }
+
+        private void onAim(InputAction.CallbackContext context)
+        {
+            Aim = context.ReadValueAsButton();
         }
 
         private void OnEnable() {

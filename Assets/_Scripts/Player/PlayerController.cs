@@ -32,6 +32,8 @@ namespace UnityTutorial.PlayerControl
         private int _crouchHash;
         private int _attackHash;
         private int _meleeHash;
+        private int _aimHash;
+        private int _shootAimHash;
         private float _xRotation;
 
         private const float _walkSpeed = 2f;
@@ -53,6 +55,10 @@ namespace UnityTutorial.PlayerControl
             _crouchHash = Animator.StringToHash("Crouch");
             _attackHash = Animator.StringToHash("Shoot");
             _meleeHash = Animator.StringToHash("Punch");
+            _aimHash = Animator.StringToHash("Aim");
+            _shootAimHash = Animator.StringToHash("ShootAim");
+
+            
         }
 
         private void FixedUpdate()
@@ -164,14 +170,20 @@ namespace UnityTutorial.PlayerControl
                 _animator.SetBool(_meleeHash, false);
             }
 
-            if (_inputManager.Attack)
+            if (_inputManager.Aim)
             {
-                _animator.SetBool(_attackHash, true);
+                _animator.SetBool(_aimHash, true);
+                if (_inputManager.Attack)
+                {
+                    _animator.SetTrigger(_shootAimHash);
+                }
             }
             else
             {
-                _animator.SetBool(_attackHash, false);
+                _animator.SetBool(_aimHash, false);
             }
         }
+
+
     }
 }

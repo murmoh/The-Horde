@@ -14,7 +14,7 @@ namespace Enemy.Attack
         [Header("Gun Attack Settings")]
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private Transform bulletSpawnPoint;
-        [SerializeField] private float shootingRate = 1f;
+        [SerializeField] private float shootingRate = 0.1f;
         [SerializeField] private float bulletSpeed = 50f;
         private float lastShotTime;
 
