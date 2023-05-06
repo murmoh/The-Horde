@@ -11,6 +11,7 @@ namespace Enemy.Attack
         [SerializeField] public GameObject fist;
         [SerializeField] private float attackDuration = 0.69f;
 
+
         [Header("Gun Attack Settings")]
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private Transform bulletSpawnPoint;

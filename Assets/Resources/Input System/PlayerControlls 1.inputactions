@@ -220,7 +220,7 @@
                     "name": "",
                     "id": "d52b4adb-ce9f-4915-b8b2-14ce6c9e0d04",
                     "path": "<Keyboard>/v",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "Melee",

@@ -11,6 +11,10 @@ namespace UnityTutorial.PlayerControl
         [SerializeField] private float AnimBlendSpeed = 8.9f;
         [SerializeField] private Transform CameraRoot;
         [SerializeField] private Transform Camera;
+        private Quaternion _initialLeftArmRotation;
+        private Quaternion _initialRightArmRotation;
+        [SerializeField] private Transform rightarm;
+        [SerializeField] private Transform leftarm;
         [SerializeField] private float UpperLimit = -40f;
         [SerializeField] private float BottomLimit = 70f;
         [SerializeField] private float MouseSensitivity = 21.9f;
@@ -42,6 +46,9 @@ namespace UnityTutorial.PlayerControl
         
         private void Start()
         {
+            _initialLeftArmRotation = leftarm.localRotation;
+            _initialRightArmRotation = rightarm.localRotation;
+
             _hasAnimator = TryGetComponent<Animator>(out _animator);
             _playerRigidbody = GetComponent<Rigidbody>();
             _inputManager = GetComponent<InputManager>();
@@ -61,6 +68,13 @@ namespace UnityTutorial.PlayerControl
             
         }
 
+        private void UpdateArmsRotation()
+        {
+            leftarm.rotation = Camera.rotation * _initialLeftArmRotation;
+            rightarm.rotation = Camera.rotation * _initialRightArmRotation;
+        }
+
+
         private void FixedUpdate()
         {
             SampleGround();
@@ -77,6 +91,7 @@ namespace UnityTutorial.PlayerControl
         private void LateUpdate()
         {
             CamMovements();
+            UpdateArmsRotation();
         }
 
         private void Move()
@@ -117,6 +132,7 @@ namespace UnityTutorial.PlayerControl
             _xRotation = Mathf.Clamp(_xRotation, UpperLimit, BottomLimit);
 
             Camera.localRotation = Quaternion.Euler(_xRotation, 0, 0);
+
             _playerRigidbody.MoveRotation(_playerRigidbody.rotation * Quaternion.Euler(0, Mouse_X * MouseSensitivity * Time.smoothDeltaTime, 0));
         }
 
