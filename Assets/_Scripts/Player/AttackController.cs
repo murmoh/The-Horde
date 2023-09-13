@@ -1,17 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityTutorial.PlayerControl;
+
 
 namespace Enemy.Attack
 {
     public class AttackController : MonoBehaviour
     {
-        [Header("Melee Attack Settings")]
-        [SerializeField] private PlayerController controller;
-        [SerializeField] public GameObject fist;
-        [SerializeField] private float attackDuration = 0.69f;
-
-
         [Header("Gun Attack Settings")]
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private Transform bulletSpawnPoint;
@@ -30,26 +25,17 @@ namespace Enemy.Attack
 
         void Update()
         {
-            if (controller._inputManager.Melee)
-            {
-                StartCoroutine(PerformMeleeAttack());
-            }
-            if (controller._inputManager.Attack && Time.time > lastShotTime + 1 / shootingRate && !isReloading)
+            if (Input.GetButtonDown("Fire1") && Time.time > lastShotTime + 1 / shootingRate && !isReloading)
             {
                 PerformGunAttack();
             }
-            if (controller._inputManager.Reload && !isReloading) // New condition to start reloading
+            if (!isReloading) // New condition to start reloading
             {
                 StartCoroutine(Reload());
             }
         }
 
-        IEnumerator PerformMeleeAttack()
-        {
-            fist.SetActive(true);
-            yield return new WaitForSeconds(attackDuration);
-            fist.SetActive(false);
-        }
+
 
         void PerformGunAttack()
         {
