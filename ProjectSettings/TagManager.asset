@@ -6,6 +6,8 @@ TagManager:
   tags:
   - melee
   - Healthbar
+  - CinemachineTarget
+  - bullet
   layers:
   - Default
   - TransparentFX

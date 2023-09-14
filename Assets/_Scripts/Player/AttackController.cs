@@ -13,6 +13,7 @@ namespace Enemy.Attack
         [SerializeField] private float bulletSpeed = 50f;
         [SerializeField] private int maxMagazineSize = 30;
         [SerializeField] private float reloadTime = 2f;
+        [SerializeField] private float bulletLifespan = 2f;
         private float lastShotTime;
         private int currentMagazineSize;
         private bool isReloading;
@@ -20,11 +21,12 @@ namespace Enemy.Attack
         void Start()
         {
             currentMagazineSize = maxMagazineSize;
+            lastShotTime = -shootingRate; // Initialize to allow immediate first shot
         }
 
         void Update()
         {
-            if (Input.GetButton("Fire1"))
+            if (Input.GetButton("Fire1") && Time.time - lastShotTime >= shootingRate)
             {
                 PerformGunAttack();
             }
@@ -40,12 +42,19 @@ namespace Enemy.Attack
         {
             if (currentMagazineSize > 0)
             {
-                lastShotTime = Time.time * shootingRate;
+                lastShotTime = Time.time;
                 GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
                 Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                 bulletRigidbody.velocity = bulletSpawnPoint.forward * bulletSpeed;
+                StartCoroutine(DestroyBulletAfterLifespan(bullet));
                 currentMagazineSize--;
             }
+        }
+
+        IEnumerator DestroyBulletAfterLifespan(GameObject bullet)
+        {
+            yield return new WaitForSeconds(bulletLifespan);
+            Destroy(bullet);
         }
 
         IEnumerator Reload()

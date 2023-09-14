@@ -5,6 +5,7 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject _Zombie;
+    public int SpawnAmount = 3;
     public Transform spawnPos;
     public bool Spawn;
 
@@ -17,7 +18,12 @@ public class Spawner : MonoBehaviour
     {
         if(Spawn)
         {
-            GameObject zombie = Instantiate(_Zombie, spawnPos.position, spawnPos.rotation);
+            for (int i = 0; i < SpawnAmount; i++)
+            {
+                GameObject zombie = Instantiate(_Zombie, spawnPos.position, spawnPos.rotation);
+            }
+            Spawn = false;
         }
+
     }
 }
