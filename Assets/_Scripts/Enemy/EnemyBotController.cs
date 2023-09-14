@@ -32,6 +32,8 @@ namespace UnityTutorial.EnemyBotControl
 
             _xVelHash = Animator.StringToHash("angularspeed");
             _yVelHash = Animator.StringToHash("speed");
+
+            playerObject = GameObject.FindWithTag("Player");
         }
 
         private void FixedUpdate()

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace Enemy.Attack
 {
     public class AttackController : MonoBehaviour
@@ -12,11 +11,11 @@ namespace Enemy.Attack
         [SerializeField] private Transform bulletSpawnPoint;
         [SerializeField] private float shootingRate = 0.1f;
         [SerializeField] private float bulletSpeed = 50f;
-        [SerializeField] private int maxMagazineSize = 30; // New variable for max magazine size
-        [SerializeField] private float reloadTime = 2f; // New variable for reload time
+        [SerializeField] private int maxMagazineSize = 30;
+        [SerializeField] private float reloadTime = 2f;
         private float lastShotTime;
-        private int currentMagazineSize; // New variable for current magazine size
-        private bool isReloading; // New variable to check if the character is currently reloading
+        private int currentMagazineSize;
+        private bool isReloading;
 
         void Start()
         {
@@ -25,35 +24,31 @@ namespace Enemy.Attack
 
         void Update()
         {
-            if (Input.GetButtonDown("Fire1") && Time.time > lastShotTime + 1 / shootingRate && !isReloading)
+            if (Input.GetButton("Fire1"))
             {
                 PerformGunAttack();
             }
-            if (!isReloading) // New condition to start reloading
+
+            // The reloading condition should be outside of the attack button check.
+            if (currentMagazineSize == 0 && !isReloading)
             {
                 StartCoroutine(Reload());
             }
         }
-
-
 
         void PerformGunAttack()
         {
             if (currentMagazineSize > 0)
             {
-                lastShotTime = Time.time;
+                lastShotTime = Time.time * shootingRate;
                 GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
                 Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
                 bulletRigidbody.velocity = bulletSpawnPoint.forward * bulletSpeed;
-                currentMagazineSize--; // Decrease the magazine size by 1 after shooting
-            }
-            else
-            {
-                StartCoroutine(Reload());
+                currentMagazineSize--;
             }
         }
 
-        IEnumerator Reload() // New coroutine to handle reloading
+        IEnumerator Reload()
         {
             isReloading = true;
             yield return new WaitForSeconds(reloadTime);

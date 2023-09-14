@@ -10,7 +10,7 @@ namespace Enemy.Health
         [SerializeField] public Image healthbar;
         [SerializeField] private const float fullHealth = 100.0f;
         [SerializeField] private float currentHealth = fullHealth;
-        [SerializeField] private float decreaseHealthAmount = 0;
+        [SerializeField] public float decreaseHealthAmount = 100;
         [SerializeField] private bool[] currentWeapon;
 
         void Start()
@@ -21,7 +21,7 @@ namespace Enemy.Health
 
         void OnTriggerEnter(Collider collider)
         {
-            if (collider.transform.gameObject.tag == "melee")
+            if (collider.transform.gameObject.tag == "bullet")
             {
                 SetDecreaseHealthAmount();
                 DecreaseHealth(decreaseHealthAmount);
