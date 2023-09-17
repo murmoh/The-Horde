@@ -23,7 +23,7 @@ namespace Enemy.Health
         {
             if (collider.transform.gameObject.tag == "bullet")
             {
-                SetDecreaseHealthAmount();
+                
                 DecreaseHealth(decreaseHealthAmount);
             }
         }

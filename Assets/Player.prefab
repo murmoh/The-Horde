@@ -37,6 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2828407237771656032}
+  - {fileID: 7821877411679111035}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -189,6 +190,7 @@ MonoBehaviour:
   bulletSpeed: 50
   maxMagazineSize: 30
   reloadTime: 2
+  bulletLifespan: 2
 --- !u!1 &2828407237771656033
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +222,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7821877411679111035}
   - {fileID: 7711954135672116103}
   m_Father: {fileID: 2828407237265277855}
   m_RootOrder: 0
@@ -335,15 +336,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6939358463707777341}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.294, z: 0.786}
-  m_LocalScale: {x: 0.3368018, y: 0.27224717, z: 0.46007127}
+  m_LocalRotation: {x: -0, y: -0.011389203, z: -0, w: 0.9999352}
+  m_LocalPosition: {x: 0.2869981, y: -0.2940035, z: 0.7929974}
+  m_LocalScale: {x: 0.33680192, y: 0.2722472, z: 0.4600713}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7821877410524322834}
   m_Father: {fileID: 2828407237771656032}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: -1.305, z: 0}
 --- !u!33 &6677016324324482082
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -418,8 +419,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7821877410524322837}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.532, z: 1.763}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.014, y: 0.511, z: 1.814}
+  m_LocalScale: {x: 0.26429173, y: 0.26638007, z: 0.26808444}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7711954135672116103}
@@ -437,7 +438,7 @@ GameObject:
   - component: {fileID: 7821877411679111033}
   - component: {fileID: 7821877411679111032}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: WeaponCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -450,13 +451,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7821877411679111034}
-  m_LocalRotation: {x: -0, y: 0.063839905, z: -0, w: 0.99796015}
-  m_LocalPosition: {x: -0.418, y: 0, z: -0.325}
-  m_LocalScale: {x: 1.2643659, y: 1.0220255, z: 1.7271239}
+  m_LocalRotation: {x: -0, y: 0.063839905, z: -0, w: 0.9979602}
+  m_LocalPosition: {x: 0, y: 0.715, z: 0}
+  m_LocalScale: {x: 1.264366, y: 1.0220253, z: 1.7271239}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2828407237771656032}
-  m_RootOrder: 0
+  m_Father: {fileID: 2828407237265277855}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 7.32, z: 0}
 --- !u!20 &7821877411679111033
 Camera:

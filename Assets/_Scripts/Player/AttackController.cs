@@ -18,10 +18,13 @@ namespace Enemy.Attack
         private int currentMagazineSize;
         private bool isReloading;
 
+        private Camera cam; // Store the reference to the camera once instead of finding it every frame
+
         void Start()
         {
             currentMagazineSize = maxMagazineSize;
-            lastShotTime = -shootingRate; // Initialize to allow immediate first shot
+            lastShotTime = -shootingRate; // Initialize to allow an immediate first shot
+            cam = Camera.main; // Cache the reference to the main camera
         }
 
         void Update()
@@ -43,11 +46,22 @@ namespace Enemy.Attack
             if (currentMagazineSize > 0)
             {
                 lastShotTime = Time.time;
-                GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-                Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
-                bulletRigidbody.velocity = bulletSpawnPoint.forward * bulletSpeed;
-                StartCoroutine(DestroyBulletAfterLifespan(bullet));
-                currentMagazineSize--;
+
+                Ray ray = cam.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Vector3 hitPoint = hit.point;
+                    Vector3 spawnPosition = bulletSpawnPoint.position;
+
+                    GameObject bullet = Instantiate(bulletPrefab, spawnPosition, bulletSpawnPoint.rotation);
+                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
+                    Vector3 bulletDirection = (hitPoint - spawnPosition).normalized; // Calculate direction to hit point
+                    bulletRigidbody.velocity = bulletDirection * bulletSpeed;
+                    StartCoroutine(DestroyBulletAfterLifespan(bullet));
+                    currentMagazineSize--;
+                }
             }
         }
 

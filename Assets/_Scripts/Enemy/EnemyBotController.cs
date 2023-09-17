@@ -13,6 +13,7 @@ namespace UnityTutorial.EnemyBotControl
         [SerializeField] private float wanderTimer = 5.0f;
 
         private NavMeshAgent _navMeshAgent;
+        public bool isOnNavMesh;
         private Rigidbody _playerRigidbody;
         private Animator _animator;
         private bool _hasAnimator;
@@ -20,6 +21,7 @@ namespace UnityTutorial.EnemyBotControl
         private int _yVelHash;
         private Vector2 _currentVelocity;
         private float _timer;
+        public Spawner script;
 
         private void Start()
         {
@@ -38,7 +40,15 @@ namespace UnityTutorial.EnemyBotControl
 
         private void FixedUpdate()
         {
-            Move();
+            if (isOnNavMesh)
+            {
+                Move();
+            }
+
+            if(script.Spawn != true)
+            {
+                isOnNavMesh = true;
+            }
         }
 
         private void Move()

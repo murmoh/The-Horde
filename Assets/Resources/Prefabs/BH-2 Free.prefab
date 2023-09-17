@@ -534,7 +534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthbar: {fileID: 7765441601823282141}
   currentHealth: 100
-  decreaseHealthAmount: 0
+  decreaseHealthAmount: 5
   currentWeapon: 00
 --- !u!195 &30150262990129426
 NavMeshAgent:
@@ -576,6 +576,8 @@ MonoBehaviour:
   wanderRadius: 20
   AnimBlendSpeed: 8.9
   wanderTimer: 5
+  isOnNavMesh: 0
+  script: {fileID: 2125575908948980340, guid: 634f395ff809d3749b425179cf2a9809, type: 3}
 --- !u!1 &5172026664749080597
 GameObject:
   m_ObjectHideFlags: 0
