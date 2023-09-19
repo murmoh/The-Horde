@@ -8,6 +8,7 @@ TagManager:
   - Healthbar
   - CinemachineTarget
   - bullet
+  - Mob
   layers:
   - Default
   - TransparentFX

@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 30150262990129425}
   m_Layer: 0
   m_Name: BH-2 Free
-  m_TagString: Untagged
+  m_TagString: Mob
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -533,9 +533,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthbar: {fileID: 7765441601823282141}
-  currentHealth: 100
-  decreaseHealthAmount: 5
+  fullHealth: 100
+  decreaseHealthAmount: 50
   currentWeapon: 00
+  score: {fileID: -3739607769624255152, guid: f41583e039e99484c88373b28176c3a5, type: 3}
 --- !u!195 &30150262990129426
 NavMeshAgent:
   m_ObjectHideFlags: 0

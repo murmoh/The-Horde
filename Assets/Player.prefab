@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2828407237265277848}
   - component: {fileID: 3259448561660694723}
   - component: {fileID: 7821877411613335838}
+  - component: {fileID: -3739607769624255152}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -171,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 2828407237771656032}
-  Sensitivities: {x: 5, y: 5}
+  Sensitivities: {x: 3, y: 3}
 --- !u!114 &7821877411613335838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,6 +192,20 @@ MonoBehaviour:
   maxMagazineSize: 30
   reloadTime: 2
   bulletLifespan: 2
+--- !u!114 &-3739607769624255152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2828407237265277840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3176d337e8422048ad077446c56e205, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points: 0
+  UI_Points: {fileID: 6885899464797304241, guid: 517bb571289da9a41900151589d24d52, type: 3}
 --- !u!1 &2828407237771656033
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -7,23 +6,33 @@ namespace Enemy.Health
     public class HealthController : MonoBehaviour
     {
         [Header("Health Settings")]
-        [SerializeField] public Image healthbar;
-        [SerializeField] private const float fullHealth = 100.0f;
-        [SerializeField] private float currentHealth = fullHealth;
-        [SerializeField] public float decreaseHealthAmount = 100;
+        [SerializeField] private Image healthbar;
+        [SerializeField] private float fullHealth = 100.0f;
+        private float currentHealth;
+        [SerializeField] private float decreaseHealthAmount = 100;
         [SerializeField] private bool[] currentWeapon;
+
+        [Header("Score Settings")]
+        public Points score;
+
 
         void Start()
         {
+            currentHealth = fullHealth;  // initialize current health
             UpdateHealthBar();
-            currentWeapon[0] = true;
+            if (currentWeapon != null && currentWeapon.Length > 0)
+            {
+                currentWeapon[0] = true;
+            }
+
+            score = FindObjectOfType<Points>();
+
         }
 
         void OnTriggerEnter(Collider collider)
         {
             if (collider.transform.gameObject.tag == "bullet")
             {
-                
                 DecreaseHealth(decreaseHealthAmount);
             }
         }
@@ -31,12 +40,18 @@ namespace Enemy.Health
         private void DecreaseHealth(float amount)
         {
             currentHealth -= amount;
+            score.AddPoints(50);
+            score.UpdatePointsText();
+            
+            // Add points when health decreases, e.g., 50 points (or whatever you desire)
+            
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
                 Destroy(gameObject);
             }
             UpdateHealthBar();
+            
         }
 
         private void UpdateHealthBar()
@@ -46,7 +61,7 @@ namespace Enemy.Health
 
         void SetDecreaseHealthAmount()
         {
-            if (currentWeapon[0])
+            if (currentWeapon != null && currentWeapon.Length > 0 && currentWeapon[0])
             {
                 decreaseHealthAmount = 50;
             }

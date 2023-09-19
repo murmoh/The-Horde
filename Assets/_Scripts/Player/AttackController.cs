@@ -17,8 +17,8 @@ namespace Enemy.Attack
         private float lastShotTime;
         private int currentMagazineSize;
         private bool isReloading;
-
         private Camera cam; // Store the reference to the camera once instead of finding it every frame
+
 
         void Start()
         {
