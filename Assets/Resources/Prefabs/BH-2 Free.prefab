@@ -572,7 +572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerObject: {fileID: 2828407237265277840, guid: f41583e039e99484c88373b28176c3a5, type: 3}
-  stoppingDistance: 2
+  stoppingDistance: 1
   chaseRadius: 10
   wanderRadius: 20
   AnimBlendSpeed: 8.9

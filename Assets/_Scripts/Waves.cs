@@ -8,15 +8,16 @@ using UnityEngine;
 public class Waves : MonoBehaviour
 {
     [Header("Wave Settings")]
-    [SerializeField] private TextMeshProUGUI waveText;  // Changed variable name to better reflect its use
+    [SerializeField] private TextMeshProUGUI waveText; 
     [SerializeField] private int waveNum = 0;
     public float timer = 10f;
+    private int increase;
 
     [Header("Spawner Setting")]
-    [SerializeField] private GameObject entity;  // Made variable names consistent with C# naming convention
-    [SerializeField] private Transform spawnerPlat;  // Use 'Transform' directly rather than GetComponent<Transform>()
-    [SerializeField] private bool spawn;  // Made variable names consistent with C# naming convention
-    public GameObject[] mobs;  // Made variable names consistent with C# naming convention
+    [SerializeField] private GameObject entity;  
+    [SerializeField] private Transform spawnerPlat;
+    [SerializeField] private bool spawn;  
+    public GameObject[] mobs;  
     [SerializeField] private int amount;
     [SerializeField] private int amountLimit = 20;  // Set initial limit
     [SerializeField] private float timePerSpawn = 2f;
@@ -27,6 +28,7 @@ public class Waves : MonoBehaviour
     public float stageDble = 0f;
     public Transform stageSpawn;
     public Transform spawner;
+    
 
     private void Update()
     {
@@ -64,7 +66,7 @@ public class Waves : MonoBehaviour
         Vector3 maxBounds = rend.bounds.max;
 
         float x = Random.Range(minBounds.x, maxBounds.x);
-        float y = spawnerPlat.position.y;  // Assuming you want to keep the y position constant
+        float y = spawnerPlat.position.y; // Keep the y position constant
         float z = Random.Range(minBounds.z, maxBounds.z);
 
         return new Vector3(x, y, z);
@@ -80,7 +82,8 @@ public class Waves : MonoBehaviour
         if (mobs.Length == 0 && !spawn)
         {
             waveNum += 1;
-            amountLimit = 20;
+            increase += 2;
+            amountLimit = 20 * increase;
             waveText.text = "Wave: " + waveNum;
             stageDble += 1;
             Vector3 Section = new Vector3(stageSpawn.position.x, stageSpawn.position.y, stageSpawn.position.z + (23.05f * stageDble));
@@ -92,4 +95,5 @@ public class Waves : MonoBehaviour
             spawn = true;
         }
     }
+
 }
