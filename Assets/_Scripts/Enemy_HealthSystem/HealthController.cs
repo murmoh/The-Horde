@@ -1,8 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 
-namespace Enemy.Health
-{
+
     public class HealthController : MonoBehaviour
     {
         [Header("Health Settings")]
@@ -71,4 +70,4 @@ namespace Enemy.Health
             }
         }
     }
-}
+
