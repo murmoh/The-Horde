@@ -1,54 +1,44 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityTutorial.PlayerControl;
 
 namespace Enemy.Attack
 {
     public class AttackController : MonoBehaviour
     {
-        [Header("Melee Attack Settings")]
-        [SerializeField] private PlayerController controller;
-        [SerializeField] public GameObject fist;
-        [SerializeField] private float attackDuration = 0.69f;
-
-
         [Header("Gun Attack Settings")]
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private Transform bulletSpawnPoint;
         [SerializeField] private float shootingRate = 0.1f;
         [SerializeField] private float bulletSpeed = 50f;
-        [SerializeField] private int maxMagazineSize = 30; // New variable for max magazine size
-        [SerializeField] private float reloadTime = 2f; // New variable for reload time
+        [SerializeField] private int maxMagazineSize = 30;
+        [SerializeField] private float reloadTime = 2f;
+        [SerializeField] private float bulletLifespan = 2f;
         private float lastShotTime;
-        private int currentMagazineSize; // New variable for current magazine size
-        private bool isReloading; // New variable to check if the character is currently reloading
+        private int currentMagazineSize;
+        private bool isReloading;
+        private Camera cam; // Store the reference to the camera once instead of finding it every frame
+
 
         void Start()
         {
             currentMagazineSize = maxMagazineSize;
+            lastShotTime = -shootingRate; // Initialize to allow an immediate first shot
+            cam = Camera.main; // Cache the reference to the main camera
         }
 
         void Update()
         {
-            if (controller._inputManager.Melee)
-            {
-                StartCoroutine(PerformMeleeAttack());
-            }
-            if (controller._inputManager.Attack && Time.time > lastShotTime + 1 / shootingRate && !isReloading)
+            if (Input.GetButton("Fire1") && Time.time - lastShotTime >= shootingRate)
             {
                 PerformGunAttack();
             }
-            if (controller._inputManager.Reload && !isReloading) // New condition to start reloading
+
+            // The reloading condition should be outside of the attack button check.
+            if (currentMagazineSize == 0 && !isReloading)
             {
                 StartCoroutine(Reload());
             }
-        }
-
-        IEnumerator PerformMeleeAttack()
-        {
-            fist.SetActive(true);
-            yield return new WaitForSeconds(attackDuration);
-            fist.SetActive(false);
         }
 
         void PerformGunAttack()
@@ -56,18 +46,32 @@ namespace Enemy.Attack
             if (currentMagazineSize > 0)
             {
                 lastShotTime = Time.time;
-                GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-                Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
-                bulletRigidbody.velocity = bulletSpawnPoint.forward * bulletSpeed;
-                currentMagazineSize--; // Decrease the magazine size by 1 after shooting
-            }
-            else
-            {
-                StartCoroutine(Reload());
+
+                Ray ray = cam.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Vector3 hitPoint = hit.point;
+                    Vector3 spawnPosition = bulletSpawnPoint.position;
+
+                    GameObject bullet = Instantiate(bulletPrefab, spawnPosition, bulletSpawnPoint.rotation);
+                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
+                    Vector3 bulletDirection = (hitPoint - spawnPosition).normalized; // Calculate direction to hit point
+                    bulletRigidbody.velocity = bulletDirection * bulletSpeed;
+                    StartCoroutine(DestroyBulletAfterLifespan(bullet));
+                    currentMagazineSize--;
+                }
             }
         }
 
-        IEnumerator Reload() // New coroutine to handle reloading
+        IEnumerator DestroyBulletAfterLifespan(GameObject bullet)
+        {
+            yield return new WaitForSeconds(bulletLifespan);
+            Destroy(bullet);
+        }
+
+        IEnumerator Reload()
         {
             isReloading = true;
             yield return new WaitForSeconds(reloadTime);
