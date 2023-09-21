@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -17,6 +18,14 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 moveDampVelocity;
     private Vector3 currentForceVelocity;
     public string Mode = "Survival";
+    [Header("Stamina Setting")]
+    [SerializeField] private Image StaminaUI;
+    [SerializeField] private float RecoverSpeed_Stamina;
+    public const float StaminaAmount = 100f;
+    [SerializeField] public float SA = StaminaAmount;
+    public float CurrentStamina = StaminaAmount;
+    [Range(-10.0f, 10.0f)] public float Stamina_recover_speed;
+    [Range(-10.0f, 10.0f)] public float Stamina_lose_speed;
 
     private void Start()
     {
@@ -25,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        Stamina_n_Recover();
+        StaminaUI.fillAmount = CurrentStamina / SA;
         Vector3 playerInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         if (playerInput.magnitude > 1f)
         {
@@ -66,5 +77,39 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(currentForceVelocity * Time.deltaTime);
 
+    }
+
+    void Stamina_n_Recover()
+    {
+        if(CurrentStamina <= 0)
+        {
+            CurrentStamina = 1;
+        }
+        if(CurrentStamina == 100f &! Input.GetKey(KeyCode.LeftShift))
+        {
+            RecoverSpeed_Stamina = 1.62f;
+        }
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            CurrentStamina -=  StaminaAmount / CurrentStamina * Stamina_lose_speed;
+            RecoverSpeed_Stamina = 1.62f;
+        }
+        else
+        {
+            RecoverSpeed_Stamina -= Time.deltaTime;
+            if(RecoverSpeed_Stamina <= 0)
+            {
+                if(CurrentStamina < 100f)
+                {
+                    CurrentStamina += StaminaAmount / CurrentStamina * Stamina_recover_speed    ;
+                    if(CurrentStamina >= 100f)
+                    {
+                        CurrentStamina = 100f;
+                        RecoverSpeed_Stamina = 1.62f;
+                    }
+                }
+                
+            }
+        }
     }
 }

@@ -1,74 +1,147 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Enemy.Attack
 {
     public class AttackController : MonoBehaviour
     {
-        [Header("Gun Attack Settings")]
-        [SerializeField] private GameObject bulletPrefab;
-        [SerializeField] private Transform bulletSpawnPoint;
-        [SerializeField] private float shootingRate = 0.1f;
-        [SerializeField] private float bulletSpeed = 50f;
-        [SerializeField] private int maxMagazineSize = 30;
-        [SerializeField] private float reloadTime = 2f;
-        [SerializeField] private float bulletLifespan = 2f;
-        private float lastShotTime;
+        // GunfireController Variables
+        public AudioClip GunShotClip;
+        public AudioSource source;
+        public Vector2 audioPitch = new Vector2(.9f, 1.1f);
+        public GameObject muzzlePrefab;
+        public GameObject muzzlePosition;
+        public bool autoFire;
+        public float shotDelay = .5f;
+        public bool rotate = true;
+        public float rotationSpeed = .25f;
+        public GameObject scope;
+        public bool scopeActive = false;
+        private bool lastScopeState;
+        public GameObject projectilePrefab;
+        public GameObject projectileToDisableOnFire;
+        private float timeLastFired;
+
+        // Variables kept from AttackController
+        private float shootingRate = 0.1f;
+        private int maxMagazineSize = 30;
+        private float reloadTime = 2f;
         private int currentMagazineSize;
         private bool isReloading;
-        private Camera cam; // Store the reference to the camera once instead of finding it every frame
-
+        [SerializeField] private float bulletSpeed = 50f;
+        private Camera cam;
 
         void Start()
         {
+            cam = Camera.main;
+            // GunfireController initialization
+            if (source != null) source.clip = GunShotClip;
+            timeLastFired = 0;
+            lastScopeState = scopeActive;
+
+            // AttackController initialization
             currentMagazineSize = maxMagazineSize;
-            lastShotTime = -shootingRate; // Initialize to allow an immediate first shot
-            cam = Camera.main; // Cache the reference to the main camera
         }
 
         void Update()
         {
-            if (Input.GetButton("Fire1") && Time.time - lastShotTime >= shootingRate)
+            // GunfireController logic
+            if (rotate)
             {
-                PerformGunAttack();
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + rotationSpeed, transform.localEulerAngles.z);
             }
 
-            // The reloading condition should be outside of the attack button check.
+            if (autoFire && ((timeLastFired + shotDelay) <= Time.time))
+            {
+                FireWeapon();
+            }
+
+            if (scope && lastScopeState != scopeActive)
+            {
+                lastScopeState = scopeActive;
+                scope.SetActive(scopeActive);
+            }
+
+            // AttackController logic
+            if (Input.GetButton("Fire1") && Time.time - timeLastFired >= shootingRate)
+            {
+                FireWeapon();
+            }
+
             if (currentMagazineSize == 0 && !isReloading)
             {
                 StartCoroutine(Reload());
             }
         }
 
-        void PerformGunAttack()
+        public void FireWeapon()
         {
             if (currentMagazineSize > 0)
             {
-                lastShotTime = Time.time;
+                timeLastFired = Time.time;
 
+                // GunfireController logic
+                var flash = Instantiate(muzzlePrefab, muzzlePosition.transform);
+
+                // Shooting logic
                 Ray ray = cam.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
                 RaycastHit hit;
 
+                Vector3 shootingDirection;
                 if (Physics.Raycast(ray, out hit))
                 {
-                    Vector3 hitPoint = hit.point;
-                    Vector3 spawnPosition = bulletSpawnPoint.position;
+                    shootingDirection = (hit.point - muzzlePosition.transform.position).normalized;
+                }
+                else
+                {
+                    shootingDirection = ray.direction;  // fallback to shooting in the direction the camera is facing
+                }
 
-                    GameObject bullet = Instantiate(bulletPrefab, spawnPosition, bulletSpawnPoint.rotation);
-                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
-                    Vector3 bulletDirection = (hitPoint - spawnPosition).normalized; // Calculate direction to hit point
-                    bulletRigidbody.velocity = bulletDirection * bulletSpeed;
-                    StartCoroutine(DestroyBulletAfterLifespan(bullet));
-                    currentMagazineSize--;
+                GameObject bullet = Instantiate(projectilePrefab, muzzlePosition.transform.position, Quaternion.LookRotation(shootingDirection));
+                Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
+                if (bulletRigidbody != null)
+                {
+                    bulletRigidbody.velocity = shootingDirection * bulletSpeed;
+                }
+
+                if (projectileToDisableOnFire != null)
+                {
+                    projectileToDisableOnFire.SetActive(false);
+                    Invoke("ReEnableDisabledProjectile", 3);
+                }
+
+                // Audio
+                HandleAudio();
+
+                currentMagazineSize--;
+            }
+        }
+
+        private void HandleAudio()
+        {
+            if (source == null) return;
+
+            if (source.transform.IsChildOf(transform))
+            {
+                source.Play();
+            }
+            else
+            {
+                AudioSource newAS = Instantiate(source);
+                if (newAS?.outputAudioMixerGroup?.audioMixer != null)
+                {
+                    float pitchValue = Random.Range(audioPitch.x, audioPitch.y);
+                    newAS.outputAudioMixerGroup.audioMixer.SetFloat("Pitch", pitchValue);
+                    newAS.pitch = pitchValue;
+                    newAS.PlayOneShot(GunShotClip);
+                    Destroy(newAS.gameObject, 4);
                 }
             }
         }
 
-        IEnumerator DestroyBulletAfterLifespan(GameObject bullet)
+        private void ReEnableDisabledProjectile()
         {
-            yield return new WaitForSeconds(bulletLifespan);
-            Destroy(bullet);
+            projectileToDisableOnFire.SetActive(true);
         }
 
         IEnumerator Reload()
