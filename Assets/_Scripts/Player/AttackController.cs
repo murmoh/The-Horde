@@ -21,6 +21,7 @@ namespace Enemy.Attack
         public GameObject projectilePrefab;
         public GameObject projectileToDisableOnFire;
         private float timeLastFired;
+        public Transform weapon;
 
         // Variables kept from AttackController
         private float shootingRate = 0.1f;
@@ -72,6 +73,8 @@ namespace Enemy.Attack
             {
                 StartCoroutine(Reload());
             }
+
+            
         }
 
         public void FireWeapon()

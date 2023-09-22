@@ -48,11 +48,15 @@ public class Waves : MonoBehaviour
         {
             if (timePerSpawn <= 0f)
             {
-                Vector3 randomPosition = RandomPositionWithinSpawner();
-                Instantiate(entity, randomPosition, spawnerPlat.rotation);
-                amount = 1;
-                amountLimit -= amount;
-                timePerSpawn = 2f;
+                for(int i = 0; i <= (amountLimit / 2); i++)
+                {
+                    Vector3 randomPosition = RandomPositionWithinSpawner();
+                    Instantiate(entity, randomPosition, spawnerPlat.rotation);
+                    amount = 1;
+                    amountLimit -= amount;
+                }
+                
+                timePerSpawn = 10f;
             }
 
             timePerSpawn -= Time.deltaTime;
