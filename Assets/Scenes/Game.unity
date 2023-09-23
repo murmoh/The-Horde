@@ -362,7 +362,7 @@ PrefabInstance:
     - target: {fileID: 7821877411613335838, guid: f41583e039e99484c88373b28176c3a5, type: 3}
       propertyPath: projectileToDisableOnFire
       value: 
-      objectReference: {fileID: 3116670267606534130, guid: a8dcd7a7d6f9d154d8ec25e89d38b243, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7821877411679111032, guid: f41583e039e99484c88373b28176c3a5, type: 3}
       propertyPath: m_RendererIndex
       value: 0
@@ -825,7 +825,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh30076
+  m_Name: pb_Mesh41762
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
