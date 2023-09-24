@@ -29,6 +29,10 @@ public class Waves : MonoBehaviour
     public Transform stageSpawn;
     public Transform spawner;
     
+    void Start()
+    {
+        spawn = true;
+    }
 
     private void Update()
     {
@@ -50,7 +54,7 @@ public class Waves : MonoBehaviour
             {
                 for(int i = 0; i <= (amountLimit / 2); i++)
                 {
-                    Vector3 randomPosition = RandomPositionWithinSpawner();
+                    Vector3 randomPosition = RandomPositionWithinSpawner(); 
                     Instantiate(entity, randomPosition, spawnerPlat.rotation);
                     amount = 1;
                     amountLimit -= amount;
